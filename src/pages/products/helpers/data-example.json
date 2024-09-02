@@ -1,0 +1,49 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "titleProduct": "IPhone 15 Pro",
+      "imageProduct": "public/products/iphone15pro.webp",
+      "priceProduct": 1500,
+      "contentProduct": "The iPhone 15 Pro is the latest model of the iPhone series, it has a 6.7-inch screen, 5G technology, and a 5nm A15 Bionic chip."
+    },
+    {
+      "id": 2,
+      "titleProduct": "Samsung Galaxy S24 Ultra",
+      "imageProduct": "public/products/samsunggalaxys24ultra.png",
+      "priceProduct": 1200
+    },
+    {
+      "id": 3,
+      "titleProduct": "Xiaomi Mi 12 Ultra",
+      "imageProduct": "public/products/xiaomimi12ultra.webp",
+      "priceProduct": 1000,
+      "contentProduct": "The Xiaomi Mi 12 Ultra is the latest model of the Mi series, it has a 6.8-inch screen, 5G technology, and a 5nm Snapdragon 8 Gen 2 chip."
+    },
+    {
+      "id": 4,
+      "titleProduct": "OnePlus 12 Pro",
+      "imageProduct": "public/products/oneplus12pro.webp",
+      "priceProduct": 900
+    },
+    {
+      "id": 5,
+      "titleProduct": "Google Pixel 7 Pro",
+      "imageProduct": "public/products/googlepixel7pro.webp",
+      "priceProduct": 800,
+      "contentProduct": "The Google Pixel 7 Pro is the latest model of the Pixel series, it has a 6.7-inch screen, 5G technology, and a 5nm Snapdragon 8 Gen 2 chip."
+    },
+    {
+      "id": 6,
+      "titleProduct": "Samsung Galaxy A25",
+      "imageProduct": "public/products/samsaunggalaxya25.jpg",
+      "priceProduct": 1500
+    },
+    {
+      "id": 7,
+      "titleProduct": "Tecno 5",
+      "imageProduct": "public/products/tecno5.webp",
+      "priceProduct": 150
+    }
+  ]
+}
