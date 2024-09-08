@@ -12,7 +12,6 @@
 /dist
 /tmp
 /out-tsc
-android
 ios
 
 # misc
