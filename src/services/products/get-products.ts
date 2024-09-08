@@ -1,4 +1,4 @@
-import { axiosInstance } from "./intance/axios-instance";
+import { axiosInstance } from "../intance/axios-instance";
 import { useQuery } from "@tanstack/react-query";
 
 type TypesProduct = {
@@ -6,6 +6,7 @@ type TypesProduct = {
   image: string;
   body: string;
   tags: string;
+  error?: boolean;
 };
 
 export const getProducts = async (): Promise<TypesProduct[]> => {
@@ -14,8 +15,8 @@ export const getProducts = async (): Promise<TypesProduct[]> => {
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error("error getProducts", error);
+    return [{ error: true } as TypesProduct];
   }
 };
 
