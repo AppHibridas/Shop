@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IonContent,
   IonPage,
@@ -15,17 +15,24 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log("Username:", username);
     console.log("Password:", password);
+
+    setRedirect(true);
   };
+
+  if (redirect) {
+    return <Redirect to="/home" />;
+  }
 
   return (
     <IonPage>
