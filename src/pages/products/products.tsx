@@ -21,32 +21,34 @@ import { useProducts } from "../../services/get-products";
 const Products: React.FC = () => {
   const titlePage = "Productos";
   const className = "products-page";
-  // const dataExampleProducts: TypesProduct[] = (dataExample.products as unknown as TypesProduct[]) ?? ([] as TypesProduct[]);
+  const dataExampleProducts: TypesProduct[] =
+    (dataExample.products as unknown as TypesProduct[]) ??
+    ([] as TypesProduct[]);
 
-  const [dataExampleProducts, setDataExampleProducts] = useState<
-    TypesProduct[]
-  >([]);
-  const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true);
+  // const [dataExampleProducts, setDataExampleProducts] = useState<
+  //   TypesProduct[]
+  // >([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(false);
 
-  const { data, error, isLoading } = useProducts();
+  // const { data, error, isLoading } = useProducts();
 
-  useEffect(() => {
-    if (data) {
-      setDataExampleProducts(data);
-      setIsLoadingProducts(false);
-    }
-  }, [data, isLoading]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setDataExampleProducts(data);
+  //     setIsLoadingProducts(false);
+  //   }
+  // }, [data, isLoading]);
 
   return (
     <IonPage>
       {isLoadingProducts ? (
         <IonSpinner></IonSpinner>
-      ) : error ? (
+      ) : false ? (
         <IonAlert
           isOpen={true}
           onDidDismiss={() => {}}
           header={"Error"}
-          message={error.message}
+          message={"Asdasdads"}
           buttons={["OK"]}
         />
       ) : (
