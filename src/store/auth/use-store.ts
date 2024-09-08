@@ -4,6 +4,7 @@ export type TypesGetLogin = {
   current_user: {
     uid: string;
     name: string;
+    lastName: string;
   };
   csrf_token: string;
   logout_token: string;

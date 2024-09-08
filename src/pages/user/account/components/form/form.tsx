@@ -38,6 +38,7 @@ export const FormAcountComponent = (props: {
           onIonChange={handleInputChange}
         />
       </IonItem>
+      {/*
       <IonItem>
         <IonLabel position="floating">Fecha de Nacimiento</IonLabel>
         <IonInput
@@ -90,7 +91,7 @@ export const FormAcountComponent = (props: {
           value={formData.confirmPassword}
           onIonChange={handleInputChange}
         />
-      </IonItem>
+      </IonItem> */}
     </>
   );
 };

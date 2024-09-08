@@ -107,12 +107,12 @@ const App: FC = () => {
               </IonTabButton>
             )}
 
-            {!showTabLogin && (
+            {/* {!showTabLogin && (
               <IonTabButton tab="cart" href="/cart">
                 <IonIcon aria-hidden="true" icon={cart} />
                 <IonLabel>Carrito</IonLabel>
               </IonTabButton>
-            )}
+            )} */}
             {!showTabLogin && (
               <IonTabButton tab="account" href="/account">
                 <IonIcon aria-hidden="true" icon={person} />

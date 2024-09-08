@@ -50,7 +50,7 @@ const Products: React.FC = () => {
   }, [data, isLoading]);
 
   useIonViewWillLeave(() => {
-    console.log("Componente Account desmontado");
+    console.log("Componente Products desmontado");
   });
 
   return (

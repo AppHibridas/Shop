@@ -1,7 +1,8 @@
 {
   "current_user": {
     "uid": "2",
-    "name": "api"
+    "name": "api",
+    "lastName": "api"
   },
   "csrf_token": "bnzFHTh2dSfqn3ndZU2WaTRkH4QUAIY8eK7vXsSx9rk",
   "logout_token": "vd5Iv64748p-BDPVA_Iq6uApFp4YMFAABpUXxIxsTyw",

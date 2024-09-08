@@ -21,10 +21,11 @@ import { FormAcountComponent } from "./components/form/form";
 const Account: React.FC = () => {
   const user = useUserStore()?.user?.current_user;
   const [name, setName] = useState(user?.name ?? "");
+  const [lastName, setLastName] = useState(user?.lastName ?? "");
 
   const [formData, setFormData] = useState({
     firstName: name,
-    lastName: "",
+    lastName: lastName,
     birthDate: "",
     photo: "",
     gender: "",
@@ -41,6 +42,7 @@ const Account: React.FC = () => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         firstName: user.name,
+        lastName: user.lastName,
       }));
     }
   }, [user]);
@@ -101,9 +103,9 @@ const Account: React.FC = () => {
                 setShowModal={setShowModal}
               />
 
-              <IonButton expand="full" onClick={() => console.log(formData)}>
+              {/* <IonButton expand="full" onClick={() => console.log(formData)}>
                 Registrar
-              </IonButton>
+              </IonButton> */}
 
               <IonModal
                 isOpen={showModal}
