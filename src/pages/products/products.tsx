@@ -11,6 +11,7 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonViewWillLeave,
 } from "@ionic/react";
 import "./products.css";
 import ProductsCard from "./components/card";
@@ -48,16 +49,22 @@ const Products: React.FC = () => {
     }
   }, [data, isLoading]);
 
+  useIonViewWillLeave(() => {
+    console.log("Componente Account desmontado");
+  });
+
   return (
     <IonPage>
       {isLoadingProducts ? (
         <IonSpinner></IonSpinner>
-      ) : false ? (
+      ) :
+      //  !data?.[0]?.error
+       false ? (
         <IonAlert
           isOpen={true}
           onDidDismiss={() => {}}
           header={"Error"}
-          message={"Asdasdads"}
+          message={"Error al cargar los productos"}
           buttons={["OK"]}
         />
       ) : (

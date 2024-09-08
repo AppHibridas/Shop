@@ -16,10 +16,10 @@ import {
   IonText,
 } from "@ionic/react";
 import { Link, Redirect } from "react-router-dom";
-import { useLoginQuery } from "../../services/auth/login";
-import { useUserStore } from "../../store/auth/use-store";
 import dataExample from "./helpers/data-example.json";
-import { useConfigStore } from "../../store/config/app";
+import { useConfigStore } from "@/store/config/app";
+import { useUserStore } from "@/store/auth/use-store";
+import { useLoginQuery } from "@/services/auth/login";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -48,7 +48,6 @@ const Login: React.FC = () => {
 
     if (!fieldsAreEmpty) {
       setShowAlert(true);
-      return;
     }
   };
 
