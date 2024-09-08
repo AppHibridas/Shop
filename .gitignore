@@ -10,9 +10,14 @@
 
 # production
 /dist
+/tmp
+/out-tsc
+android
+ios
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
