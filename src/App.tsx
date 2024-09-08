@@ -42,8 +42,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Login from "./pages/login/login";
-import Register from "./pages/register/register";
+import Register from "./pages/user/register/register";
+import Login from "./pages/user/login/login";
 
 setupIonicReact();
 
