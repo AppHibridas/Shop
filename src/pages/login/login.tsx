@@ -1,31 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  IonContent,
   IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonButton,
-  IonList,
-  IonText,
+  IonContent,
   IonGrid,
   IonRow,
   IonCol,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton,
+  IonAlert,
+  IonText,
 } from "@ionic/react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { useLoginQuery } from "../../services/auth/login";
+import { useUserStore } from "../../store/auth/use-store";
+import dataExample from "./helpers/data-example.json";
+import { useConfigStore } from "../../store/config/app";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [showLabelError, setShowLabelError] = useState(false);
+  const [validateFields, setValidateFields] = useState(false);
+  const [mssError, setMssError] = useState("");
+  const [redirectToHome, setRedirectToHome] = useState(false);
+
+  const optionsDataExample = useConfigStore(
+    (state) => state.optionsDataExample
+  );
+  const setUser = useUserStore((state) => state.setUser);
+
+  const { data, error, isLoading } = useLoginQuery(
+    username,
+    password,
+    validateFields
+  );
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
+    const fieldsAreEmpty = username !== "" || password !== "";
+    setValidateFields(fieldsAreEmpty);
+
+    if (!fieldsAreEmpty) {
+      setShowAlert(true);
+      return;
+    }
   };
+
+  useEffect(() => {
+    if (data) {
+      if (!data?.error || optionsDataExample) {
+        if (optionsDataExample) {
+          setUser(dataExample);
+        } else {
+          setUser(data);
+        }
+        setRedirectToHome(true);
+      }
+    }
+
+    if (error || data?.error) {
+      setMssError(error?.message ?? "Usuario no encontrado");
+      setShowLabelError(true);
+      setTimeout(() => {
+        setShowLabelError(false);
+      }, 5000);
+    }
+  }, [data, error, setUser]);
+
+  if (redirectToHome) {
+    return <Redirect to="/home" />;
+  }
 
   return (
     <IonPage>
@@ -38,10 +88,7 @@ const Login: React.FC = () => {
         <IonGrid className="ion-height-100 ion-align-items-center ion-justify-content-center">
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" size-md="6" size-lg="4">
-              <IonText>
-                <h2>¡Bienvenido!</h2>
-              </IonText>
-              <IonList>
+              <form onSubmit={handleSubmit}>
                 <IonItem>
                   <IonLabel position="floating">Usuario:</IonLabel>
                   <IonInput
@@ -58,17 +105,31 @@ const Login: React.FC = () => {
                     onIonChange={(e) => setPassword(e.detail.value!)}
                   />
                 </IonItem>
-                <IonButton expand="full" onClick={handleSubmit}>
+                <IonButton expand="full" type="submit">
                   Iniciar sesión
                 </IonButton>
-              </IonList>
+              </form>
               <IonItem lines="none">
                 <IonLabel>¿No tienes cuenta?</IonLabel>
                 <Link to="/register">Regístrate</Link>
               </IonItem>
+              {showLabelError && (
+                <IonText color="danger">
+                  <p>Error: {mssError}</p>
+                </IonText>
+              )}
             </IonCol>
           </IonRow>
         </IonGrid>
+        <IonAlert
+          isOpen={showAlert}
+          onDidDismiss={() => setShowAlert(false)}
+          header="Datos no completados"
+          subHeader="Por favor, completa los campos"
+          message="No puedes dejar campos vacíos"
+          buttons={["OK"]}
+        />
+        {isLoading && <div>Loading...</div>}
       </IonContent>
     </IonPage>
   );

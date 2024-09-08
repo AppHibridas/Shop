@@ -1,0 +1,9 @@
+{
+  "current_user": {
+    "uid": "2",
+    "name": "api"
+  },
+  "csrf_token": "bnzFHTh2dSfqn3ndZU2WaTRkH4QUAIY8eK7vXsSx9rk",
+  "logout_token": "vd5Iv64748p-BDPVA_Iq6uApFp4YMFAABpUXxIxsTyw",
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.W10.mK9PMH7DFrW6Yz4HYzFp1EzoNwwfaqGZK1LFnloKa8QPueNmHUjw03ANDqlr6LgBdldj5YzAKjiNH2Fg9xdU8mRVos-MC_GF1MwPDdxC90jnmIcXzH4E6D8iWOaIRtLxpeLbvzH6451I0tJh-JRdQv-zJZpuDoNnmem-sEadoe01kQrvAwbj20v-Ay2iYF-NGr_kGOU77Wypy7pOzQAufN7yuysg2_-XSrZR4MrH7Uvwv4_cO2fPmqQ5K0moKuJigO5tAwOgQylXkcsjpJv6NNB6W68ekMy7_B0YAcbc1tBYDjL8s2x-pRIoM6X-51zT9O7fGIX3rFkyMH4c3t139w"
+}
