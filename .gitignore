@@ -10,6 +10,10 @@
 
 # production
 /dist
+/tmp
+/out-tsc
+android
+ios
 
 # misc
 .DS_Store
