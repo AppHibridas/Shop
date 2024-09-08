@@ -4,6 +4,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonItem,
   IonPage,
   IonRow,
   IonSearchbar,
@@ -16,28 +17,36 @@ import ProductsCard from "./components/card";
 import dataExample from "./helpers/data-example.json";
 import { TypesProduct } from "./types";
 import { useEffect, useState } from "react";
-import { useProducts } from "../../services/get-products";
+import { useProducts } from "../../services/products/get-products";
+import { useConfigStore } from "../../store/config/app";
 
 const Products: React.FC = () => {
   const titlePage = "Productos";
   const className = "products-page";
-  const dataExampleProducts: TypesProduct[] =
-    (dataExample.products as unknown as TypesProduct[]) ??
-    ([] as TypesProduct[]);
+  const optionsApp = useConfigStore();
 
-  // const [dataExampleProducts, setDataExampleProducts] = useState<
-  //   TypesProduct[]
-  // >([]);
+  const [dataProducts, setDataProducts] = useState<TypesProduct[]>();
   const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(false);
 
-  // const { data, error, isLoading } = useProducts();
+  const { optionsDataExample, urlBackend } = optionsApp;
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setDataExampleProducts(data);
-  //     setIsLoadingProducts(false);
-  //   }
-  // }, [data, isLoading]);
+  const { data, error, isLoading } = useProducts();
+
+  useEffect(() => {
+    if (data) {
+      if (!data?.[0]?.error || optionsDataExample) {
+        if (optionsDataExample) {
+          setDataProducts(dataExample);
+        } else {
+          setDataProducts(data);
+        }
+      }
+    }
+
+    if (!isLoading) {
+      setIsLoadingProducts(false);
+    }
+  }, [data, isLoading]);
 
   return (
     <IonPage>
@@ -75,17 +84,26 @@ const Products: React.FC = () => {
 
           <IonContent fullscreen>
             <div className={className}>
-              {dataExampleProducts.map((product) => (
+              {dataProducts?.map((product, index) => (
                 <ProductsCard
                   className={className}
-                  key={product.id}
-                  id={product.id}
-                  titleProduct={product.titleProduct}
-                  imageProduct={product.imageProduct}
-                  priceProduct={product.priceProduct}
-                  contentProduct={product.contentProduct}
+                  key={index}
+                  title={product.title}
+                  image={urlBackend + product.image}
+                  tags={product.tags}
+                  body={product.body}
                 />
-              ))}
+              )) ?? (
+                <IonItem lines="none">
+                  <IonAlert
+                    isOpen={true}
+                    onDidDismiss={() => {}}
+                    header={"Error"}
+                    message={"No hay productos"}
+                    buttons={["OK"]}
+                  />
+                </IonItem>
+              )}
             </div>
           </IonContent>
         </>
