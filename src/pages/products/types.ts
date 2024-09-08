@@ -1,7 +1,6 @@
 export type TypesProduct = {
-  id: number;
-  titleProduct: string;
-  imageProduct: string;
-  priceProduct?: string;
-  contentProduct?: string;
+  title: string;
+  image: string;
+  body: string;
+  tags: string;
 };

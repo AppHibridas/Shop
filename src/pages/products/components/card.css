@@ -1,0 +1,11 @@
+.ion-card {
+  position: relative;
+  padding-bottom: 50px;
+}
+
+.add-to-cart-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10;
+}

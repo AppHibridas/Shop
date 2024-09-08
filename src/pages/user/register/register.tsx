@@ -14,11 +14,17 @@ import {
   IonRow,
   IonCol,
   IonText,
+  IonLabel,
+  useIonViewWillLeave,
 } from "@ionic/react";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { FormRegisterComponent } from "./components/form/form";
+import { useUserStore } from "@/store/auth/use-store";
+import { Redirect } from "react-router";
 
 const Register: React.FC = () => {
+  const setUser = useUserStore((state) => state.setUser);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +37,9 @@ const Register: React.FC = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [showMssError, setShowMssError] = useState(false);
+  const [mssError, setMssError] = useState("");
+  const [redirectToHome, setRedirectToHome] = useState(false);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -55,6 +64,50 @@ const Register: React.FC = () => {
     });
     return image.dataUrl!;
   };
+
+  const handleRegister = () => {
+    if (
+      formData.firstName === "" ||
+      formData.lastName === "" ||
+      formData.birthDate === "" ||
+      formData.photo === "" ||
+      formData.gender === "" ||
+      formData.email === "" ||
+      formData.password === "" ||
+      formData.confirmPassword === ""
+    ) {
+      setMssError("Todos los campos son obligatorios");
+      setShowMssError(true);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setMssError("Las contraseñas no coinciden");
+      setShowMssError(true);
+      return;
+    }
+
+    setUser({
+      access_token: "dummy_access_token",
+      csrf_token: "dummy_csrf_token",
+      logout_token: "dummy_logout_token",
+      current_user: {
+        uid: "dummy_uid",
+        name: formData.firstName,
+        lastName: formData.lastName,
+      },
+    });
+
+    setRedirectToHome(true);
+  };
+
+  useIonViewWillLeave(() => {
+    console.log("Componente Register desmontado");
+  });
+
+  if (redirectToHome) {
+    return <Redirect to="/home" />;
+  }
 
   return (
     <IonPage>
@@ -84,7 +137,19 @@ const Register: React.FC = () => {
                 setShowModal={setShowModal}
               />
 
-              <IonButton expand="full" onClick={() => console.log(formData)}>
+              {showMssError && (
+                <IonLabel className="ion-text-center">
+                  <p className="error-message">{mssError}</p>
+                </IonLabel>
+              )}
+
+              <IonLabel className="ion-text-center">
+                <p>
+                  Al hacer clic en "Registrar", aceptas nuestros Términos y
+                  Política de privacidad.
+                </p>
+              </IonLabel>
+              <IonButton expand="full" onClick={handleRegister}>
                 Registrar
               </IonButton>
 

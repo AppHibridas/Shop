@@ -1,3 +1,4 @@
+import "./card.css";
 import React, { useState, useEffect } from "react";
 import {
   IonCard,
@@ -5,49 +6,65 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonCardContent,
+  IonButton,
+  IonIcon,
+  IonContent,
 } from "@ionic/react";
 import { TypesProduct } from "../types";
 import { validateFileExist } from "../../../utils/validate-file-exist";
 import { c } from "vitest/dist/reporters-5f784f42";
+import { cartOutline } from "ionicons/icons";
+import { useUserStore } from "../../../store/auth/use-store";
+import { decodeHtmlEntities } from "../helpers/decode-html";
+import imageDefault from "../../../assets/img/noimage.jpg";
 
 const ProductsCard: React.FC<
   TypesProduct & {
     className: string;
+    key: number;
   }
 > = (props) => {
-  const imageDefault = "public/products/noimage.jpg";
+  const { className, key, title, image, tags, body } = props;
 
-  const {
-    className,
-    id,
-    titleProduct,
-    imageProduct,
-    priceProduct,
-    contentProduct,
-  } = props;
+  const user = useUserStore()?.user;
+  const access_token = user?.access_token;
 
   const [imageExist, setImageExist] = useState(false);
+
   useEffect(() => {
     const checkImage = async () => {
-      const imageExist = await validateFileExist(imageProduct);
+      const imageExist = await validateFileExist(image);
       setImageExist(imageExist);
     };
-
     checkImage();
-  }, [imageProduct]);
+  }, [image]);
+
+  const handleAddToCart = () => {
+    console.log("Producto agregado al carrito:", title);
+  };
 
   return (
-    <IonCard key={id}>
+    <IonCard key={key} className="ion-card">
       <IonCardHeader>
         <img
           className={className + "-img"}
-          src={`${imageExist ? imageProduct : imageDefault}`}
-          alt={`${titleProduct}`}
+          src={`${imageExist ? image : imageDefault}`}
+          alt={`${title}`}
         />
-        {priceProduct && <IonCardSubtitle> $. {priceProduct}</IonCardSubtitle>}
-        <IonCardTitle>{titleProduct}</IonCardTitle>
+        {tags && <IonCardSubtitle> {tags}</IonCardSubtitle>}
+        <IonCardTitle>{decodeHtmlEntities(title)}</IonCardTitle>
       </IonCardHeader>
-      {contentProduct && <IonCardContent>{contentProduct}</IonCardContent>}
+      {/* {body && <IonCardContent>{body}</IonCardContent>} */}
+
+      {access_token && (
+        <IonButton
+          fill="clear"
+          className="add-to-cart-button"
+          onClick={handleAddToCart}
+        >
+          <IonIcon icon={cartOutline} />
+        </IonButton>
+      )}
     </IonCard>
   );
 };
