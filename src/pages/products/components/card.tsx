@@ -11,8 +11,6 @@ import {
   IonContent,
 } from "@ionic/react";
 import { TypesProduct } from "../types";
-import { validateFileExist } from "../../../utils/validate-file-exist";
-import { c } from "vitest/dist/reporters-5f784f42";
 import { cartOutline } from "ionicons/icons";
 import { useUserStore } from "../../../store/auth/use-store";
 import { decodeHtmlEntities } from "../helpers/decode-html";
@@ -29,15 +27,11 @@ const ProductsCard: React.FC<
   const user = useUserStore()?.user;
   const access_token = user?.access_token;
 
-  const [imageExist, setImageExist] = useState(false);
-
-  useEffect(() => {
-    const checkImage = async () => {
-      const imageExist = await validateFileExist(image);
-      setImageExist(imageExist);
-    };
-    checkImage();
-  }, [image]);
+  const handleImageError: React.ReactEventHandler<HTMLImageElement> = (
+    event
+  ) => {
+    event.currentTarget.src = imageDefault;
+  };
 
   const handleAddToCart = () => {
     console.log("Producto agregado al carrito:", title);
@@ -48,8 +42,10 @@ const ProductsCard: React.FC<
       <IonCardHeader>
         <img
           className={className + "-img"}
-          src={`${imageExist ? image : imageDefault}`}
-          alt={`${title}`}
+          src={image}
+          alt={title}
+          onError={handleImageError}
+          role="presentation"
         />
         {tags && <IonCardSubtitle> {tags}</IonCardSubtitle>}
         <IonCardTitle>{decodeHtmlEntities(title)}</IonCardTitle>
