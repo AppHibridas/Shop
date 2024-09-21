@@ -11,8 +11,7 @@ type TypesProduct = {
 
 export const getProducts = async (): Promise<TypesProduct[]> => {
   try {
-    const response = await axiosInstance.get("/api/v1/products");
-    console.log(response.data);
+    const response = await axiosInstance().get("/api/v1/products");
     return response.data;
   } catch (error) {
     console.error("error getProducts", error);

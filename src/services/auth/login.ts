@@ -4,11 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 
 const getToken = async (name: string, pass: string): Promise<TypesGetLogin> => {
   try {
-    const response = await axiosInstance.post("/user/login?_format=json", {
+    const response = await axiosInstance(false).post("/user/login?_format=json", {
       name: name,
       pass: pass,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("error getToken", error);
@@ -23,9 +22,14 @@ export const useLoginQuery = (
   pass: string,
   shouldFetch: boolean
 ) => {
-  return useQuery<TypesGetLogin, Error>({
+  const query = useQuery<TypesGetLogin, Error>({
     queryKey: ["login", name, pass],
     queryFn: () => getToken(name, pass),
     enabled: shouldFetch && name !== "" && pass !== "",
   });
+
+  return {
+    ...query,
+    refetch: query.refetch,
+  };
 };

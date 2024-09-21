@@ -20,6 +20,7 @@ import { TypesProduct } from "./types";
 import { useEffect, useState } from "react";
 import { useProducts } from "../../services/products/get-products";
 import { useConfigStore } from "../../store/config/app";
+import { generateGUID } from "@/utils/generate-guid";
 
 const Products: React.FC = () => {
   const titlePage = "Productos";
@@ -55,66 +56,66 @@ const Products: React.FC = () => {
 
   return (
     <IonPage>
-      {isLoadingProducts ? (
-        <IonSpinner></IonSpinner>
-      ) :
-      //  !data?.[0]?.error
-       false ? (
-        <IonAlert
-          isOpen={true}
-          onDidDismiss={() => {}}
-          header={"Error"}
-          message={"Error al cargar los productos"}
-          buttons={["OK"]}
-        />
-      ) : (
-        <>
-          <IonHeader>
-            <IonGrid>
-              <IonToolbar>
-                <IonRow>
-                  <IonCol size="6">
-                    <IonToolbar>
-                      <IonTitle> {titlePage} </IonTitle>
-                    </IonToolbar>
-                  </IonCol>
-                  <IonCol size="6">
-                    <IonSearchbar
-                      animated={true}
-                      placeholder="Buscar"
-                    ></IonSearchbar>
-                  </IonCol>
-                </IonRow>
-              </IonToolbar>
-            </IonGrid>
-          </IonHeader>
+      {isLoadingProducts && <IonSpinner></IonSpinner>}
 
-          <IonContent fullscreen>
-            <div className={className}>
-              {dataProducts?.map((product, index) => (
-                <ProductsCard
-                  className={className}
-                  key={index}
-                  title={product.title}
-                  image={urlBackend + product.image}
-                  tags={product.tags}
-                  body={product.body}
-                />
-              )) ?? (
-                <IonItem lines="none">
-                  <IonAlert
-                    isOpen={true}
-                    onDidDismiss={() => {}}
-                    header={"Error"}
-                    message={"No hay productos"}
-                    buttons={["OK"]}
+      {!isLoadingProducts &&
+        (error || data?.[0]?.error ? (
+          <IonAlert
+            isOpen={true}
+            onDidDismiss={() => {}}
+            header={"Error"}
+            message={"Error al cargar los productos"}
+            buttons={["OK"]}
+          />
+        ) : (
+          <>
+            <IonHeader>
+              <IonGrid>
+                <IonToolbar>
+                  <IonRow>
+                    <IonCol size="6">
+                      <IonToolbar>
+                        <IonTitle> {titlePage} </IonTitle>
+                      </IonToolbar>
+                    </IonCol>
+                    <IonCol size="6">
+                      <IonSearchbar
+                        animated={true}
+                        placeholder="Buscar"
+                      ></IonSearchbar>
+                    </IonCol>
+                  </IonRow>
+                </IonToolbar>
+              </IonGrid>
+            </IonHeader>
+
+            <IonContent fullscreen>
+              <div className={className}>
+                {dataProducts?.map((product, index) => (
+                  <ProductsCard
+                    className={className}
+                    key={index}
+                    idProduct={generateGUID()}
+                    title={product.title}
+                    image={urlBackend + product.image}
+                    tags={product.tags}
+                    body={product.body}
                   />
-                </IonItem>
-              )}
-            </div>
-          </IonContent>
-        </>
-      )}
+                )) ?? (
+                  <IonItem lines="none">
+                    <IonAlert
+                      isOpen={true}
+                      onDidDismiss={() => {}}
+                      header={"Error"}
+                      message={"No hay productos"}
+                      buttons={["OK"]}
+                    />
+                  </IonItem>
+                )}
+              </div>
+            </IonContent>
+          </>
+        ))}
     </IonPage>
   );
 };

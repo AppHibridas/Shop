@@ -9,3 +9,23 @@
   right: 10px;
   z-index: 10;
 }
+
+
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.full-height-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 90vh; /* Adjust as needed */
+}
+
+.full-height-card ion-card-content {
+  flex-grow: 1;
+  overflow-y: auto;
+}

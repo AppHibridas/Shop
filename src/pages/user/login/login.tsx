@@ -20,6 +20,7 @@ import dataExample from "./helpers/data-example.json";
 import { useConfigStore } from "@/store/config/app";
 import { useUserStore } from "@/store/auth/use-store";
 import { useLoginQuery } from "@/services/auth/login";
+import { clearCookies } from "@/utils/clear-cookies";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -35,7 +36,7 @@ const Login: React.FC = () => {
   );
   const setUser = useUserStore((state) => state.setUser);
 
-  const { data, error, isLoading } = useLoginQuery(
+  const { data, error, isLoading, refetch } = useLoginQuery(
     username,
     password,
     validateFields
@@ -48,12 +49,16 @@ const Login: React.FC = () => {
 
     if (!fieldsAreEmpty) {
       setShowAlert(true);
+    } else {
+      refetch();
     }
   };
 
   useEffect(() => {
     if (data) {
-      if (!data?.error || optionsDataExample) {
+      if (!data?.error) {
+        console.log("data error", data?.error);
+        console.log("optionsDataExample", optionsDataExample);
         if (optionsDataExample) {
           setUser(dataExample);
         } else {
@@ -71,6 +76,10 @@ const Login: React.FC = () => {
       }, 5000);
     }
   }, [data, error, setUser]);
+
+  useEffect(() => {
+    clearCookies();
+  }, []);
 
   if (redirectToHome) {
     return <Redirect to="/home" />;

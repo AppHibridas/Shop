@@ -9,61 +9,98 @@ import {
   IonButton,
   IonIcon,
   IonContent,
+  IonModal,
 } from "@ionic/react";
 import { TypesProduct } from "../types";
-import { validateFileExist } from "../../../utils/validate-file-exist";
-import { c } from "vitest/dist/reporters-5f784f42";
-import { cartOutline } from "ionicons/icons";
+import { cartOutline, information } from "ionicons/icons";
 import { useUserStore } from "../../../store/auth/use-store";
 import { decodeHtmlEntities } from "../helpers/decode-html";
 import imageDefault from "../../../assets/img/noimage.jpg";
+import { useAddProductCart } from "../helpers/add-product-cart";
 
 const ProductsCard: React.FC<
   TypesProduct & {
     className: string;
-    key: number;
+    idProduct: string;
   }
 > = (props) => {
-  const { className, key, title, image, tags, body } = props;
+  const { className, idProduct, title, image, tags, body } = props;
 
   const user = useUserStore()?.user;
   const access_token = user?.access_token;
 
-  const [imageExist, setImageExist] = useState(false);
+  const [showMdlInfo, setShowMdlInfo] = useState(false);
 
-  useEffect(() => {
-    const checkImage = async () => {
-      const imageExist = await validateFileExist(image);
-      setImageExist(imageExist);
-    };
-    checkImage();
-  }, [image]);
+  const addProductCart = useAddProductCart();
+
+  const handleImageError: React.ReactEventHandler<HTMLImageElement> = (
+    event
+  ) => {
+    event.currentTarget.src = imageDefault;
+  };
 
   const handleAddToCart = () => {
     console.log("Producto agregado al carrito:", title);
+    addProductCart({
+      id: idProduct,
+      products: title,
+      image: image,
+      quantity: 1,
+    });
+  };
+
+  const handleShowMdlInfo = () => {
+    setShowMdlInfo(!showMdlInfo);
   };
 
   return (
-    <IonCard key={key} className="ion-card">
+    <IonCard key={idProduct} className="ion-card">
       <IonCardHeader>
         <img
           className={className + "-img"}
-          src={`${imageExist ? image : imageDefault}`}
-          alt={`${title}`}
+          src={image}
+          alt={title}
+          onError={handleImageError}
+          role="presentation"
         />
         {tags && <IonCardSubtitle> {tags}</IonCardSubtitle>}
         <IonCardTitle>{decodeHtmlEntities(title)}</IonCardTitle>
       </IonCardHeader>
-      {/* {body && <IonCardContent>{body}</IonCardContent>} */}
 
       {access_token && (
-        <IonButton
-          fill="clear"
-          className="add-to-cart-button"
-          onClick={handleAddToCart}
+        <div className="add-to-cart-button">
+          <IonButton fill="clear" onClick={handleShowMdlInfo}>
+            <IonIcon icon={information} />
+          </IonButton>
+
+          <IonButton fill="clear" onClick={handleAddToCart}>
+            <IonIcon icon={cartOutline} />
+          </IonButton>
+        </div>
+      )}
+
+      {showMdlInfo && (
+        <IonModal
+          isOpen={showMdlInfo}
+          onDidDismiss={() => setShowMdlInfo(false)}
+          className="custom-modal"
         >
-          <IonIcon icon={cartOutline} />
-        </IonButton>
+          <IonCard className="full-height-card">
+            <IonCardHeader>
+              <IonCardTitle>{decodeHtmlEntities(title)}</IonCardTitle>
+              <IonCardSubtitle>{tags}</IonCardSubtitle>
+            </IonCardHeader>
+            <img
+              className={className + "-img"}
+              src={image}
+              alt={title}
+              onError={handleImageError}
+              role="presentation"
+            />
+            <IonCardContent>{decodeHtmlEntities(body)}</IonCardContent>
+            <IonButton onClick={handleShowMdlInfo}>Cerrar</IonButton>
+          </IonCard>
+        </IonModal>
       )}
     </IonCard>
   );
