@@ -20,6 +20,7 @@ import { TypesProduct } from "./types";
 import { useEffect, useState } from "react";
 import { useProducts } from "../../services/products/get-products";
 import { useConfigStore } from "../../store/config/app";
+import { generateGUID } from "@/utils/generate-guid";
 
 const Products: React.FC = () => {
   const titlePage = "Productos";
@@ -94,7 +95,7 @@ const Products: React.FC = () => {
                   <ProductsCard
                     className={className}
                     key={index}
-                    idProduct={index}
+                    idProduct={generateGUID()}
                     title={product.title}
                     image={urlBackend + product.image}
                     tags={product.tags}

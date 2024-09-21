@@ -44,30 +44,37 @@ import "./theme/variables.css";
 import Products from "./pages/products/products";
 import Login from "./pages/user/login/login";
 import Register from "./pages/user/register/register";
+import Cart from "./pages/shopping/cart/cart";
 import { useUserStore } from "./store/auth/use-store";
 import { FC, useEffect, useState } from "react";
 import Account from "./pages/user/account/account";
 import Exit from "./pages/user/exit/exit";
+import { useCartStore } from "./store/cart/use-store-cart";
+import Payment from "./pages/shopping/payment/payment";
 
 setupIonicReact();
 
 const App: FC = () => {
   const user = useUserStore().user;
   const setUser = useUserStore((state) => state.setUser);
-
+  const setCart = useCartStore((state) => state.setCart);
 
   const [showTabLogin, setShowTabLogin] = useState(true);
 
   useEffect(() => {
-    const userSession = localStorage.getItem('userSession');
+    const userSession = localStorage.getItem("userSession");
     if (userSession) {
       setUser(JSON.parse(userSession));
+
+      const cartSession = localStorage.getItem("cart");
+      if (cartSession) {
+        setCart(JSON.parse(cartSession));
+      }
     }
   }, [setUser]);
 
   useEffect(() => {
     const accessToken = user?.access_token;
-    console.log("accessToken", accessToken);
     setShowTabLogin(!accessToken);
   }, [user]);
 
@@ -88,9 +95,9 @@ const App: FC = () => {
               <Register />
             </Route>
 
-            {/* <Route path="/cart">
-              <IonLabel>Carrito</IonLabel>
-            </Route> */}
+            <Route path="/cart">
+              <Cart />
+            </Route>
 
             <Route path="/account">
               <Account />
@@ -98,6 +105,10 @@ const App: FC = () => {
 
             <Route path="/exit">
               <Exit />
+            </Route>
+
+            <Route path="/payment">
+              <Payment />
             </Route>
 
             <Route exact path="/">
@@ -116,12 +127,12 @@ const App: FC = () => {
               </IonTabButton>
             )}
 
-            {/* {!showTabLogin && (
+            {!showTabLogin && (
               <IonTabButton tab="cart" href="/cart">
                 <IonIcon aria-hidden="true" icon={cart} />
                 <IonLabel>Carrito</IonLabel>
               </IonTabButton>
-            )} */}
+            )}
             {!showTabLogin && (
               <IonTabButton tab="account" href="/account">
                 <IonIcon aria-hidden="true" icon={person} />

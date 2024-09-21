@@ -16,11 +16,12 @@ import { cartOutline, information } from "ionicons/icons";
 import { useUserStore } from "../../../store/auth/use-store";
 import { decodeHtmlEntities } from "../helpers/decode-html";
 import imageDefault from "../../../assets/img/noimage.jpg";
+import { useAddProductCart } from "../helpers/add-product-cart";
 
 const ProductsCard: React.FC<
   TypesProduct & {
     className: string;
-    idProduct: number;
+    idProduct: string;
   }
 > = (props) => {
   const { className, idProduct, title, image, tags, body } = props;
@@ -30,6 +31,8 @@ const ProductsCard: React.FC<
 
   const [showMdlInfo, setShowMdlInfo] = useState(false);
 
+  const addProductCart = useAddProductCart();
+
   const handleImageError: React.ReactEventHandler<HTMLImageElement> = (
     event
   ) => {
@@ -38,6 +41,12 @@ const ProductsCard: React.FC<
 
   const handleAddToCart = () => {
     console.log("Producto agregado al carrito:", title);
+    addProductCart({
+      id: idProduct,
+      products: title,
+      image: image,
+      quantity: 1,
+    });
   };
 
   const handleShowMdlInfo = () => {
@@ -57,7 +66,6 @@ const ProductsCard: React.FC<
         {tags && <IonCardSubtitle> {tags}</IonCardSubtitle>}
         <IonCardTitle>{decodeHtmlEntities(title)}</IonCardTitle>
       </IonCardHeader>
-      {/* {body && <IonCardContent>{body}</IonCardContent>} */}
 
       {access_token && (
         <div className="add-to-cart-button">

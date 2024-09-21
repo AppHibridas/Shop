@@ -8,7 +8,6 @@ const getToken = async (name: string, pass: string): Promise<TypesGetLogin> => {
       name: name,
       pass: pass,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("error getToken", error);
