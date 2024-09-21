@@ -20,10 +20,10 @@ import imageDefault from "../../../assets/img/noimage.jpg";
 const ProductsCard: React.FC<
   TypesProduct & {
     className: string;
-    key: number;
+    idProduct: number;
   }
 > = (props) => {
-  const { className, key, title, image, tags, body } = props;
+  const { className, idProduct, title, image, tags, body } = props;
 
   const user = useUserStore()?.user;
   const access_token = user?.access_token;
@@ -45,7 +45,7 @@ const ProductsCard: React.FC<
   };
 
   return (
-    <IonCard key={key} className="ion-card">
+    <IonCard key={idProduct} className="ion-card">
       <IonCardHeader>
         <img
           className={className + "-img"}
