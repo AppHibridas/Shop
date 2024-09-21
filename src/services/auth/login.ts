@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const getToken = async (name: string, pass: string): Promise<TypesGetLogin> => {
   try {
-    const response = await axiosInstance.post("/user/login?_format=json", {
+    const response = await axiosInstance(false).post("/user/login?_format=json", {
       name: name,
       pass: pass,
     });
