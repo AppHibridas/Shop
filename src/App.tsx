@@ -53,8 +53,17 @@ setupIonicReact();
 
 const App: FC = () => {
   const user = useUserStore().user;
+  const setUser = useUserStore((state) => state.setUser);
+
 
   const [showTabLogin, setShowTabLogin] = useState(true);
+
+  useEffect(() => {
+    const userSession = localStorage.getItem('userSession');
+    if (userSession) {
+      setUser(JSON.parse(userSession));
+    }
+  }, [setUser]);
 
   useEffect(() => {
     const accessToken = user?.access_token;

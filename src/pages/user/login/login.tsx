@@ -35,7 +35,7 @@ const Login: React.FC = () => {
   );
   const setUser = useUserStore((state) => state.setUser);
 
-  const { data, error, isLoading } = useLoginQuery(
+  const { data, error, isLoading, refetch } = useLoginQuery(
     username,
     password,
     validateFields
@@ -48,16 +48,23 @@ const Login: React.FC = () => {
 
     if (!fieldsAreEmpty) {
       setShowAlert(true);
+    } else {
+      refetch();
     }
   };
 
   useEffect(() => {
     if (data) {
-      if (!data?.error || optionsDataExample) {
+      if (optionsDataExample) {
+        // if (!data?.error && !optionsDataExample) {
+        console.log("data error",  data?.error);
+        console.log("optionsDataExample", optionsDataExample);
         if (optionsDataExample) {
           setUser(dataExample);
+          localStorage.setItem('userSession', JSON.stringify(dataExample));
         } else {
           setUser(data);
+          localStorage.setItem('userSession', JSON.stringify(data));
         }
         setRedirectToHome(true);
       }

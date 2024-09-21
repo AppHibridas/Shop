@@ -23,9 +23,14 @@ export const useLoginQuery = (
   pass: string,
   shouldFetch: boolean
 ) => {
-  return useQuery<TypesGetLogin, Error>({
+  const query = useQuery<TypesGetLogin, Error>({
     queryKey: ["login", name, pass],
     queryFn: () => getToken(name, pass),
     enabled: shouldFetch && name !== "" && pass !== "",
   });
+
+  return {
+    ...query,
+    refetch: query.refetch,
+  };
 };
