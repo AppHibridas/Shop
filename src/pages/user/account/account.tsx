@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   IonPage,
   IonHeader,
@@ -9,68 +9,12 @@ import {
   IonRow,
   IonCol,
   IonText,
-  IonButton,
-  IonModal,
-  IonDatetime,
   useIonViewWillLeave,
 } from "@ionic/react";
-import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
-import { useUserStore } from "@/store/auth/use-store";
-import { FormAcountComponent } from "./components/form/form";
+
+import { AcountComponent } from "./components/card/card";
 
 const Account: React.FC = () => {
-  const user = useUserStore()?.user?.current_user;
-  const [name, setName] = useState(user?.name ?? "");
-  const [lastName, setLastName] = useState(user?.lastName ?? "");
-
-  const [formData, setFormData] = useState({
-    firstName: name,
-    lastName: lastName,
-    birthDate: "",
-    photo: "",
-    gender: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    if (user?.name) {
-      setName(user.name);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        firstName: user.name,
-        lastName: user.lastName,
-      }));
-    }
-  }, [user]);
-
-  const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleDateChange = (e: any) => {
-    setFormData({ ...formData, birthDate: e.detail.value });
-    setShowModal(false);
-  };
-
-  const handlePhotoChange = async () => {
-    const photo = await takePhoto();
-    setFormData({ ...formData, photo });
-  };
-
-  const takePhoto = async () => {
-    const image = await Camera.getPhoto({
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Camera,
-      quality: 100,
-    });
-    return image.dataUrl!;
-  };
-
   useIonViewWillLeave(() => {
     console.log("Componente Account desmontado");
   });
@@ -96,28 +40,7 @@ const Account: React.FC = () => {
                 <h2>¡Bienvenido!</h2>
               </IonText>
 
-              <FormAcountComponent
-                formData={formData}
-                handleInputChange={handleInputChange}
-                handlePhotoChange={handlePhotoChange}
-                setShowModal={setShowModal}
-              />
-
-              {/* <IonButton expand="full" onClick={() => console.log(formData)}>
-                Registrar
-              </IonButton> */}
-
-              <IonModal
-                isOpen={showModal}
-                onDidDismiss={() => setShowModal(false)}
-              >
-                <div className="account-page-modal-date">
-                  <IonDatetime onIonChange={handleDateChange} />
-                </div>
-                <IonButton onClick={() => setShowModal(false)}>
-                  Cerrar
-                </IonButton>
-              </IonModal>
+              <AcountComponent />
             </IonCol>
           </IonRow>
         </IonGrid>

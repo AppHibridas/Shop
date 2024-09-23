@@ -57,11 +57,13 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (data) {
       if (!data?.error) {
-        console.log("data error", data?.error);
         console.log("optionsDataExample", optionsDataExample);
+        console.log("data", data);
         if (optionsDataExample) {
+          console.log("dataExample", dataExample);
           setUser(dataExample);
         } else {
+          console.log("data", data);
           setUser(data);
         }
         setRedirectToHome(true);

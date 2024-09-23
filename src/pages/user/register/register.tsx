@@ -94,7 +94,12 @@ const Register: React.FC = () => {
       current_user: {
         uid: "dummy_uid",
         name: formData.firstName,
-        lastName: formData.lastName,
+        full_name: formData.firstName + " " + formData.lastName,
+        last_name: formData.lastName,
+        picture: formData.photo,
+        birth_date: formData.birthDate,
+        email: formData.email,
+        gender: formData.gender,
       },
     });
 

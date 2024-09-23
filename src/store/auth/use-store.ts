@@ -4,7 +4,12 @@ export type TypesGetLogin = {
   current_user: {
     uid: string;
     name: string;
-    lastName: string;
+    full_name: string | null;
+    last_name: string | null;
+    birth_date: string | null;
+    gender: string | null;
+    email: string | null;
+    picture: string | null;
   };
   csrf_token: string;
   logout_token: string;
@@ -27,5 +32,6 @@ export const useUserStore = create<UserStore>((set) => ({
   clearUser: () => {
     set({ user: null });
     localStorage.removeItem("userSession");
+    localStorage.removeItem("cart");
   },
 }));
