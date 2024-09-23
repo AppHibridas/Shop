@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy:github": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
@@ -54,6 +55,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-react": "^7.32.2",
+    "gh-pages": "^6.1.1",
     "jsdom": "^22.1.0",
     "terser": "^5.4.0",
     "typescript": "^5.1.6",
