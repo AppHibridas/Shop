@@ -12,11 +12,11 @@ import {
   useIonViewWillLeave,
 } from "@ionic/react";
 
-import { AcountComponent } from "./components/card/card";
+import { AccountComponent } from "./components/card/card";
 
 const Account: React.FC = () => {
   useIonViewWillLeave(() => {
-    console.log("Componente Account desmontado");
+    console.info("Componente Account desmontado");
   });
 
   return (
@@ -40,7 +40,7 @@ const Account: React.FC = () => {
                 <h2>¡Bienvenido!</h2>
               </IonText>
 
-              <AcountComponent />
+              <AccountComponent />
             </IonCol>
           </IonRow>
         </IonGrid>

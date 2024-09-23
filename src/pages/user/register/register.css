@@ -1,6 +1,11 @@
 .register-page-modal-date {
-  display: "flex";
-  justify-content: "center";
-  align-items: "center";
-  height: "100%";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.error-message {
+  color: red !important;
+  font-size: 12px;
 }

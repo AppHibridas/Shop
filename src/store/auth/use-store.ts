@@ -7,7 +7,7 @@ export type TypesGetLogin = {
     full_name: string | null;
     last_name: string | null;
     birth_date: string | null;
-    gender: string | null;
+    gender: "male" | "female" | "other" | null;
     email: string | null;
     picture: string | null;
   };

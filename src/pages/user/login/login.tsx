@@ -18,7 +18,7 @@ import {
 import { Link, Redirect } from "react-router-dom";
 import dataExample from "./helpers/data-example.json";
 import { useConfigStore } from "@/store/config/app";
-import { useUserStore } from "@/store/auth/use-store";
+import { TypesGetLogin, useUserStore } from "@/store/auth/use-store";
 import { useLoginQuery } from "@/services/auth/login";
 import { clearCookies } from "@/utils/clear-cookies";
 
@@ -57,13 +57,9 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (data) {
       if (!data?.error) {
-        console.log("optionsDataExample", optionsDataExample);
-        console.log("data", data);
         if (optionsDataExample) {
-          console.log("dataExample", dataExample);
-          setUser(dataExample);
+          setUser(dataExample as TypesGetLogin);
         } else {
-          console.log("data", data);
           setUser(data);
         }
         setRedirectToHome(true);

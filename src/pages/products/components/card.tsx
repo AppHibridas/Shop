@@ -40,7 +40,7 @@ const ProductsCard: React.FC<
   };
 
   const handleAddToCart = () => {
-    console.log("Producto agregado al carrito:", title);
+    console.info("Producto agregado al carrito:", title);
     addProductCart({
       id: idProduct,
       products: title,

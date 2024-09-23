@@ -1,3 +1,16 @@
-.form-account-img {
-  height: 250px;
+.account-info {
+  padding: 16px;
+}
+
+.account-info-img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.label {
+  font-weight: bold;
+  margin-top: 8px;
 }

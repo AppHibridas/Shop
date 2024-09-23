@@ -1,66 +1,89 @@
-import { useUserStore } from "@/store/auth/use-store";
 import "./card.css";
+
 import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonGrid,
+  IonRow,
+  IonCol,
   IonImg,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
+  IonText,
 } from "@ionic/react";
 
-export const AcountComponent = () => {
+import { getGender } from "../../helpers/gender";
+import { useUserStore } from "@/store/auth/use-store";
+
+export const AccountComponent = () => {
   const className = "account-info";
   const user = useUserStore()?.user?.current_user;
 
+  const formattedBirthDate = user?.birth_date
+    ? new Date(user.birth_date).toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "";
+
   return (
-    <div className={className}>
-      <IonItem>
-        <IonLabel>Foto</IonLabel>
-        {user?.picture && (
-          <IonImg className={`${className}-img`} src={user?.picture} />
-        )}
-      </IonItem>
-      <IonItem>
-        <IonLabel>Nombre</IonLabel>
-        <IonLabel>{user?.name}</IonLabel>
-      </IonItem>
-      <IonItem>
-        <IonLabel>Apellido</IonLabel>
-        <IonLabel>{user?.last_name}</IonLabel>
-      </IonItem>
-      {/*
-      <IonItem>
-        <IonLabel position="floating">Fecha de Nacimiento</IonLabel>
-        <IonInput
-          name="birthDate"
-          value={formData.birthDate}
-          onIonFocus={() => setShowModal(true)}
-        />
-      </IonItem>
-     
-      <IonItem>
-        <IonLabel position="floating">Género</IonLabel>
-        <IonSelect
-          name="gender"
-          value={formData.gender}
-          onIonChange={handleInputChange}
-        >
-          <IonSelectOption value="male">Masculino</IonSelectOption>
-          <IonSelectOption value="female">Femenino</IonSelectOption>
-          <IonSelectOption value="other">Otro</IonSelectOption>
-        </IonSelect>
-      </IonItem>
-      <IonItem>
-        <IonLabel position="floating">Correo</IonLabel>
-        <IonInput
-          name="email"
-          type="email"
-          value={formData.email}
-          onIonChange={handleInputChange}
-        />
-      </IonItem>
-       */}
-    </div>
+    <IonCard className={className}>
+      <IonCardHeader>
+        <IonCardTitle>Perfil de Usuario</IonCardTitle>
+        <IonCardSubtitle>Información Personal</IonCardSubtitle>
+      </IonCardHeader>
+      <IonGrid>
+        <IonRow>
+          <IonCol>
+            {user?.picture && (
+              <IonImg className={`account-info-img`} src={user?.picture} />
+            )}
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="label">Nombre</IonText>
+          </IonCol>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="responsive-text">{user?.full_name}</IonText>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="label">Apellido</IonText>
+          </IonCol>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="responsive-text">{user?.last_name}</IonText>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="label">Fecha de Nacimiento</IonText>
+          </IonCol>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="responsive-text">{formattedBirthDate}</IonText>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="label">Género</IonText>
+          </IonCol>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="responsive-text">
+              {getGender(user?.gender)}
+            </IonText>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="label">Usuario</IonText>
+          </IonCol>
+          <IonCol size-sm="12" size-md="6">
+            <IonText className="responsive-text">{user?.name}</IonText>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonCard>
   );
 };
