@@ -7,6 +7,7 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/Shop/' : '/',
   plugins: [react(), legacy()],
   server: {
     port: 3000,
@@ -21,6 +22,9 @@ export default defineConfig({
       "@store": path.resolve(__dirname, "./src/store"),
       "@utils": path.resolve(__dirname, "./src/utils"),
     },
+  },
+  build: {
+    outDir: "dist",
   },
   test: {
     globals: true,

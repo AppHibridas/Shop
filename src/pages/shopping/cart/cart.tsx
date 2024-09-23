@@ -59,7 +59,7 @@ const Cart: React.FC = () => {
   };
 
   useIonViewWillLeave(() => {
-    console.log("Componente Cart desmontado");
+    console.info("Componente Cart desmontado");
   });
 
   if (redirectPayment) {

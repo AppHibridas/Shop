@@ -1,6 +1,6 @@
 import "./register.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonPage,
   IonHeader,
@@ -19,27 +19,31 @@ import {
 } from "@ionic/react";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { FormRegisterComponent } from "./components/form/form";
-import { useUserStore } from "@/store/auth/use-store";
 import { Redirect } from "react-router";
+import { TypesCreateUser, useCreateUserQuery } from "@/services/auth/register";
+import { validatePassword } from "./helpers/validate-password";
 
 const Register: React.FC = () => {
-  const setUser = useUserStore((state) => state.setUser);
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<
+    TypesCreateUser & { shouldFetch: boolean }
+  >({
     firstName: "",
     lastName: "",
     birthDate: "",
     photo: "",
-    gender: "",
+    gender: null,
     email: "",
     password: "",
     confirmPassword: "",
+    shouldFetch: false,
   });
 
   const [showModal, setShowModal] = useState(false);
   const [showMssError, setShowMssError] = useState(false);
-  const [mssError, setMssError] = useState("");
-  const [redirectToHome, setRedirectToHome] = useState(false);
+  const [mssError, setMssError] = useState<string | null | undefined>("");
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
+
+  const { data, error, refetch } = useCreateUserQuery(formData);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -71,42 +75,67 @@ const Register: React.FC = () => {
       formData.lastName === "" ||
       formData.birthDate === "" ||
       formData.photo === "" ||
-      formData.gender === "" ||
       formData.email === "" ||
       formData.password === "" ||
       formData.confirmPassword === ""
     ) {
       setMssError("Todos los campos son obligatorios");
       setShowMssError(true);
+      formData.shouldFetch = false;
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setMssError("Las contraseñas no coinciden");
       setShowMssError(true);
+      formData.shouldFetch = false;
       return;
     }
 
-    setUser({
-      access_token: "dummy_access_token",
-      csrf_token: "dummy_csrf_token",
-      logout_token: "dummy_logout_token",
-      current_user: {
-        uid: "dummy_uid",
-        name: formData.firstName,
-        lastName: formData.lastName,
-      },
-    });
+    if (validatePassword(formData.password) === false) {
+      setMssError(
+        "La contraseña debe tener al menos 6 caracteres, una letra mayúscula, una letra minúscula y un número"
+      );
+      setShowMssError(true);
+      formData.shouldFetch = false;
+      return;
+    }
 
-    setRedirectToHome(true);
+    const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!regexEmail.test(formData.email)) {
+      setMssError("El correo no es válido");
+      setShowMssError(true);
+      formData.shouldFetch = false;
+      return;
+    }
+
+    setFormData({ ...formData, shouldFetch: true });
+    refetch();
   };
 
+  useEffect(() => {
+    if (data) {
+      if (data?.isCreated) {
+        alert("Usuario creado correctamente");
+        setRedirectToLogin(true);
+      }
+    }
+
+    if (error || !data?.isCreated) {
+      setMssError(data?.error);
+      setShowMssError(true);
+      setTimeout(() => {
+        setShowMssError(false);
+      }, 5000);
+    }
+  }, [data, error]);
+
   useIonViewWillLeave(() => {
-    console.log("Componente Register desmontado");
+    console.info("Componente Register desmontado");
   });
 
-  if (redirectToHome) {
-    return <Redirect to="/home" />;
+  if (redirectToLogin) {
+    return <Redirect to="/login" />;
   }
 
   return (
@@ -158,7 +187,11 @@ const Register: React.FC = () => {
                 onDidDismiss={() => setShowModal(false)}
               >
                 <div className="register-page-modal-date">
-                  <IonDatetime onIonChange={handleDateChange} />
+                  <IonDatetime
+                    onIonChange={handleDateChange}
+                    min="1920-01-01"
+                    max="2020-12-31"
+                  />
                 </div>
                 <IonButton onClick={() => setShowModal(false)}>
                   Cerrar
