@@ -2,6 +2,7 @@ import { axiosInstance } from "../intance/axios-instance";
 import { useQuery } from "@tanstack/react-query";
 
 type TypesProduct = {
+  nid: string;
   title: string;
   image: string;
   body: string;

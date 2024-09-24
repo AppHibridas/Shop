@@ -58,8 +58,10 @@ const App: FC = () => {
   const user = useUserStore().user;
   const setUser = useUserStore((state) => state.setUser);
   const setCart = useCartStore((state) => state.setCart);
+  const cartItems = useCartStore((state) => state.cart);
 
   const [showTabLogin, setShowTabLogin] = useState(true);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");
@@ -77,6 +79,10 @@ const App: FC = () => {
     const accessToken = user?.access_token;
     setShowTabLogin(!accessToken);
   }, [user]);
+
+  useEffect(() => {
+    setCartCount(cartItems?.length ?? 0);
+  }, [cartItems]);
 
   return (
     <IonApp>
@@ -130,7 +136,12 @@ const App: FC = () => {
             {!showTabLogin && (
               <IonTabButton tab="cart" href="/cart">
                 <IonIcon aria-hidden="true" icon={cart} />
-                <IonLabel>Carrito</IonLabel>
+                <IonLabel>
+                  Carrito
+                  {cartCount > 0 && (
+                    <span className="cart-count"> | {cartCount}</span>
+                  )}
+                </IonLabel>
               </IonTabButton>
             )}
             {!showTabLogin && (

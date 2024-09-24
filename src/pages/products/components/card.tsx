@@ -1,5 +1,5 @@
 import "./card.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   IonCard,
   IonCardHeader,
@@ -8,7 +8,6 @@ import {
   IonCardContent,
   IonButton,
   IonIcon,
-  IonContent,
   IonModal,
 } from "@ionic/react";
 import { TypesProduct } from "../types";
@@ -21,10 +20,9 @@ import { useAddProductCart } from "../helpers/add-product-cart";
 const ProductsCard: React.FC<
   TypesProduct & {
     className: string;
-    idProduct: string;
   }
 > = (props) => {
-  const { className, idProduct, title, image, tags, body } = props;
+  const { className, nid, title, image, tags, body } = props;
 
   const user = useUserStore()?.user;
   const access_token = user?.access_token;
@@ -42,7 +40,7 @@ const ProductsCard: React.FC<
   const handleAddToCart = () => {
     console.info("Producto agregado al carrito:", title);
     addProductCart({
-      id: idProduct,
+      id: nid,
       products: title,
       image: image,
       quantity: 1,
@@ -54,7 +52,7 @@ const ProductsCard: React.FC<
   };
 
   return (
-    <IonCard key={idProduct} className="ion-card">
+    <IonCard key={nid} className="ion-card">
       <IonCardHeader>
         <img
           className={className + "-img"}

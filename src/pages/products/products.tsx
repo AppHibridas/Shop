@@ -9,18 +9,19 @@ import {
   IonRow,
   IonSearchbar,
   IonSpinner,
+  IonText,
   IonTitle,
   IonToolbar,
   useIonViewWillLeave,
 } from "@ionic/react";
 import "./products.css";
-import ProductsCard from "./components/card";
 import dataExample from "./helpers/data-example.json";
 import { TypesProduct } from "./types";
 import { useEffect, useState } from "react";
 import { useProducts } from "../../services/products/get-products";
 import { useConfigStore } from "../../store/config/app";
 import { generateGUID } from "@/utils/generate-guid";
+import ProductsCard from "./components/card";
 
 const Products: React.FC = () => {
   const titlePage = "Productos";
@@ -29,10 +30,28 @@ const Products: React.FC = () => {
 
   const [dataProducts, setDataProducts] = useState<TypesProduct[]>();
   const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(false);
+  const [searchProduct, setSearchProduct] = useState<string>("");
+  const [isSearchProduct, setIsSearchProduct] = useState<boolean>(false);
 
   const { optionsDataExample, urlBackend } = optionsApp;
 
   const { data, error, isLoading } = useProducts();
+
+  const RenderNoProducts = () => {
+    return (
+      <IonItem lines="none">
+        {/* <IonAlert
+          isOpen={true}
+          onDidDismiss={() => {}}
+          header={"Error"}
+          message={"No hay productos"}
+          buttons={["OK"]}
+        />
+         */}
+        <IonText>No hay productos</IonText>
+      </IonItem>
+    );
+  };
 
   useEffect(() => {
     if (data) {
@@ -49,6 +68,14 @@ const Products: React.FC = () => {
       setIsLoadingProducts(false);
     }
   }, [data, isLoading]);
+
+  useEffect(() => {
+    if (searchProduct) {
+      setIsSearchProduct(true);
+    } else {
+      setIsSearchProduct(false);
+    }
+  }, [searchProduct]);
 
   useIonViewWillLeave(() => {
     console.info("Componente Products desmontado");
@@ -82,6 +109,7 @@ const Products: React.FC = () => {
                       <IonSearchbar
                         animated={true}
                         placeholder="Buscar"
+                        onIonChange={(e) => setSearchProduct(e.detail.value!)}
                       ></IonSearchbar>
                     </IonCol>
                   </IonRow>
@@ -91,27 +119,37 @@ const Products: React.FC = () => {
 
             <IonContent fullscreen>
               <div className={className}>
-                {dataProducts?.map((product, index) => (
-                  <ProductsCard
-                    className={className}
-                    key={index}
-                    idProduct={generateGUID()}
-                    title={product.title}
-                    image={urlBackend + product.image}
-                    tags={product.tags}
-                    body={product.body}
-                  />
-                )) ?? (
-                  <IonItem lines="none">
-                    <IonAlert
-                      isOpen={true}
-                      onDidDismiss={() => {}}
-                      header={"Error"}
-                      message={"No hay productos"}
-                      buttons={["OK"]}
+                {!isSearchProduct &&
+                  (dataProducts?.map((product, index) => (
+                    <ProductsCard
+                      className={className}
+                      key={product.nid}
+                      nid={product.nid}
+                      title={product.title}
+                      image={urlBackend + product.image}
+                      tags={product.tags}
+                      body={product.body}
                     />
-                  </IonItem>
-                )}
+                  )) ?? <RenderNoProducts />)}
+
+                {isSearchProduct &&
+                  (dataProducts
+                    ?.filter((product) =>
+                      product.title
+                        .toLowerCase()
+                        .includes(searchProduct.toLowerCase())
+                    )
+                    .map((product, index) => (
+                      <ProductsCard
+                        className={className}
+                        key={product.nid}
+                        nid={product.nid}
+                        title={product.title}
+                        image={urlBackend + product.image}
+                        tags={product.tags}
+                        body={product.body}
+                      />
+                    )) ?? <RenderNoProducts />)}
               </div>
             </IonContent>
           </>
