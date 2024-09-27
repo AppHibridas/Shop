@@ -10,7 +10,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { cart, home, logIn, logOut, person } from "ionicons/icons";
+import { cart, home, list, logIn, logOut, person } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -51,6 +51,8 @@ import Account from "./pages/user/account/account";
 import Exit from "./pages/user/exit/exit";
 import { useCartStore } from "./store/cart/use-store-cart";
 import Payment from "./pages/shopping/payment/payment";
+import Orders from "./pages/shopping/orders/list/orders";
+import DetailOrder from "./pages/shopping/orders/details/details";
 
 setupIonicReact();
 
@@ -58,8 +60,10 @@ const App: FC = () => {
   const user = useUserStore().user;
   const setUser = useUserStore((state) => state.setUser);
   const setCart = useCartStore((state) => state.setCart);
+  const cartItems = useCartStore((state) => state.cart);
 
   const [showTabLogin, setShowTabLogin] = useState(true);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");
@@ -77,6 +81,10 @@ const App: FC = () => {
     const accessToken = user?.access_token;
     setShowTabLogin(!accessToken);
   }, [user]);
+
+  useEffect(() => {
+    setCartCount(cartItems?.length ?? 0);
+  }, [cartItems]);
 
   return (
     <IonApp>
@@ -97,6 +105,14 @@ const App: FC = () => {
 
             <Route path="/cart">
               <Cart />
+            </Route>
+
+            <Route path="/orders">
+              <Orders />
+            </Route>
+
+            <Route path="/details/:guid">
+              <DetailOrder />
             </Route>
 
             <Route path="/account">
@@ -130,7 +146,18 @@ const App: FC = () => {
             {!showTabLogin && (
               <IonTabButton tab="cart" href="/cart">
                 <IonIcon aria-hidden="true" icon={cart} />
-                <IonLabel>Carrito</IonLabel>
+                <IonLabel>
+                  Carrito
+                  {cartCount > 0 && (
+                    <span className="cart-count"> | {cartCount}</span>
+                  )}
+                </IonLabel>
+              </IonTabButton>
+            )}
+            {!showTabLogin && (
+              <IonTabButton tab="orders" href="/orders">
+                <IonIcon aria-hidden="true" icon={list} />
+                <IonLabel>Ordenes</IonLabel>
               </IonTabButton>
             )}
             {!showTabLogin && (
