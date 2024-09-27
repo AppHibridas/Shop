@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export type TypesGetLogin = {
   current_user: {
-    uid: string;
+    uid: number;
     name: string;
     full_name: string | null;
     last_name: string | null;
@@ -33,5 +33,6 @@ export const useUserStore = create<UserStore>((set) => ({
     set({ user: null });
     localStorage.removeItem("userSession");
     localStorage.removeItem("cart");
+    localStorage.removeItem("lastOrder");
   },
 }));

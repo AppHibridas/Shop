@@ -10,7 +10,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { cart, home, logIn, logOut, person } from "ionicons/icons";
+import { cart, home, list, logIn, logOut, person } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -51,6 +51,8 @@ import Account from "./pages/user/account/account";
 import Exit from "./pages/user/exit/exit";
 import { useCartStore } from "./store/cart/use-store-cart";
 import Payment from "./pages/shopping/payment/payment";
+import Orders from "./pages/shopping/orders/list/orders";
+import DetailOrder from "./pages/shopping/orders/details/details";
 
 setupIonicReact();
 
@@ -105,6 +107,14 @@ const App: FC = () => {
               <Cart />
             </Route>
 
+            <Route path="/orders">
+              <Orders />
+            </Route>
+
+            <Route path="/details/:guid">
+              <DetailOrder />
+            </Route>
+
             <Route path="/account">
               <Account />
             </Route>
@@ -142,6 +152,12 @@ const App: FC = () => {
                     <span className="cart-count"> | {cartCount}</span>
                   )}
                 </IonLabel>
+              </IonTabButton>
+            )}
+            {!showTabLogin && (
+              <IonTabButton tab="orders" href="/orders">
+                <IonIcon aria-hidden="true" icon={list} />
+                <IonLabel>Ordenes</IonLabel>
               </IonTabButton>
             )}
             {!showTabLogin && (

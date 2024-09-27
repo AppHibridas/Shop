@@ -1,78 +1,101 @@
-import { useCartStore } from "@/store/cart/use-store-cart";
+import {
+  TypesCreateProduct,
+  useShopProducts,
+} from "@/services/products/shop-products";
+import { useUserStore } from "@/store/auth/use-store";
+import { TypesCartStore, useCartStore } from "@/store/cart/use-store-cart";
 import { generateGUID } from "@/utils/generate-guid";
 import {
-  IonButton,
+  IonPage,
+  IonContent,
   IonCard,
-  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonContent,
+  IonCardContent,
+  IonList,
   IonItem,
   IonLabel,
-  IonList,
-  IonPage,
   IonThumbnail,
+  IonButton,
+  IonLoading,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
+import { Redirect } from "react-router";
 
 const Payment: React.FC = () => {
+  const user = useUserStore((state) => state.user);
   const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
   const orderNumber = generateGUID();
 
   const [showBtnPrint, setShowBtnPrint] = useState(true);
+  const [isErrorShop, setIsErrorShop] = useState(false);
+  const [showDetailsOrder, setShowDetailsOrder] = useState(false);
+  const [redirectDetails, setRedirectDetails] = useState(false);
 
-  const printPayment = () => {
-    setShowBtnPrint(false);
-
-    setTimeout(() => {
-      window.print();
-    }, 1000);
-  };
+  const { data, isLoading, refetch } = useShopProducts({
+    uid: user?.current_user?.uid as number,
+    uuid: orderNumber,
+    productos: cart?.map((product) => ({
+      nid: product.id,
+      stock: product.quantity.toString(),
+    })),
+  } as TypesCreateProduct);
 
   useEffect(() => {
-    const handleAfterPrint = () => {
-      setShowBtnPrint(true);
-    };
-    window.addEventListener("afterprint", handleAfterPrint);
-    return () => {
-      window.removeEventListener("afterprint", handleAfterPrint);
-    };
-  }, []);
+    console.log("data", data);
+    console.log("isLoading", isLoading);
+    if (!isLoading) {
+      if (data?.error) {
+        setIsErrorShop(true);
+      }
+
+      if (data?.status === "success") {
+        setIsErrorShop(false);
+        setShowDetailsOrder(true);
+        clearCart();
+        setRedirectDetails(true);
+      } else {
+        setIsErrorShop(true);
+      }
+    }
+  }, [data, isLoading]);
+
+  useEffect(() => {
+    refetch();
+  }, [location.pathname, refetch]);
+
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
+
+  if (redirectDetails) {
+    return <Redirect to={`/details/${orderNumber}`} />;
+  }
 
   return (
     <IonPage>
       <IonContent>
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Payment</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonList>
-              <IonItem>
-                <IonLabel>ID orden</IonLabel>
-                <IonLabel>{orderNumber}</IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>Productos</IonLabel>
-              </IonItem>
-              {cart?.map((product) => (
-                <IonItem key={product.id}>
-                  <IonThumbnail slot="start">
-                    <img src={product.image} alt={product.products} />
-                  </IonThumbnail>
-                  <IonLabel>{product.products}</IonLabel>
-                  <IonLabel>Cantidad. {product.quantity}</IonLabel>
-                </IonItem>
-              ))}
-            </IonList>
-          </IonCardContent>
+        {isLoading && (
+          <div>
+            <IonLoading isOpen={true} message="Cargando..." />
+          </div>
+        )}
 
-          {showBtnPrint && (
+        {isErrorShop && (
+          <IonCard>
+            <IonCardHeader>
+              <IonCardTitle>Error</IonCardTitle>
+            </IonCardHeader>
             <IonCardContent>
-              <IonButton onClick={printPayment}>Imprimir</IonButton>
+              <IonList>
+                <IonItem>
+                  <IonLabel>Error al finalizar la orden</IonLabel>
+                </IonItem>
+              </IonList>
             </IonCardContent>
-          )}
-        </IonCard>
+          </IonCard>
+        )}
       </IonContent>
     </IonPage>
   );
